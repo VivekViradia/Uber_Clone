@@ -19,4 +19,6 @@ router.post("/login", [
 
 router.get("/profile",authMiddleware.isAuthenticated, userController.getUserProfile);
 
+router.post("/logout",authMiddleware.isAuthenticated, userController.logoutUser);
+
 module.exports = router;
