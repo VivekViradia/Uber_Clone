@@ -1,6 +1,4 @@
 const captionModel = require("../models/caption.model");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
 const { validationResult } = require("express-validator");
 const captionService = require("../services/caption.servics");
 
@@ -11,25 +9,33 @@ module.exports.registerCaption = async (req, res) => {
     }
     const { fullName, email, password, vehicle, location } = req.body;
     const { color, plateNumber, capacity, vehicleType } = vehicle;
-    
+
     try {
         const existingCaption = await captionModel.findOne({ email });
         if (existingCaption) {
             return res.status(400).json({ message: "Caption already exists" });
         }
-        
+
         const hashedPassword = await captionModel.hashPassword(password);
+        
         const caption = await captionService.createCaption({
             fullName,
             email,
             password: hashedPassword,
-            vehicle: { color, plateNumber, capacity, vehicleType },
-            location,
+            vehicle: {
+                color,
+                plateNumber,
+                capacity,
+                vehicleType
+            },
+            location: location ? location : {
+                longitude: 0,
+                latitude: 0
+            },
         });
-        
-        await caption.save(); // Add this line to save the caption to the database
-        
-        res.status(201).json({ message: "Caption created successfully", caption });
+        const token = caption.generateAuthToken();
+
+        res.status(201).json({ message: "Caption created successfully", token, caption });
     } catch (error) {
         res.status(500).json({ message: "Error creating caption", error: error.message });
     }

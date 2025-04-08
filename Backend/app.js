@@ -14,8 +14,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-app.use("/users", userRoutes);
-app.use("/captions", captionRoutes);
+app.use("/user", userRoutes);
+app.use("/caption", captionRoutes);
 app.get('/', (req, res) => {
     console.log("Hello World");
 })
