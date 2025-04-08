@@ -17,12 +17,20 @@ const captionSchema = new mongoose.Schema({
             maxlength: [30, "Last name must be less than 30 characters long"],
         },
     },
+    captionId: {
+        type: Number,
+        unique: true,
+        max: [99999, "Caption ID must be at most 5 digits"],
+    },
     email: {
         type: String,
         required: true,
         unique: true,
         lowercase: true,
-        match: [/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, "Please enter a valid email address"]
+        match: [
+            /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+            "Please enter a valid email address"
+        ]
     },
     password: {
         type: String,
@@ -59,26 +67,50 @@ const captionSchema = new mongoose.Schema({
         },
     },
     location: {
-        latitude: {
-            type: Number,
-        },
-        longitude: {
-            type: Number,
-        },
+        latitude: Number,
+        longitude: Number,
     },
 });
 
-captionSchema.methods.generateAuthToken = function () {
-    const token = jwt.sign({ _id: this._id }, process.env.JWT_SECRET, { expiresIn: "24h" });
-    return token;
-}
+// 🔁 Auto-increment captionId before saving
+captionSchema.pre("save", async function (next) {
+    if (!this.isNew) return next();
 
+    try {
+        const last = await this.constructor.findOne().sort("-captionId").exec();
+        this.captionId = last?.captionId ? last.captionId + 1 : 10001;
+        next();
+    } catch (err) {
+        next(err);
+    }
+});
+
+// 🔐 Auto-hash password before saving
+captionSchema.pre("save", async function (next) {
+    if (!this.isModified("password")) return next();
+
+    try {
+        this.password = await this.constructor.hashPassword(this.password);
+        next();
+    } catch (err) {
+        next(err);
+    }
+});
+
+// 🔐 JWT Token Generator
+captionSchema.methods.generateAuthToken = function () {
+    return jwt.sign({ _id: this._id }, process.env.JWT_SECRET, { expiresIn: "24h" });
+};
+
+// 🔑 Compare raw vs hashed password
 captionSchema.methods.comparePassword = async function (password) {
     return await bcrypt.compare(password, this.password);
-}
+};
 
+// 🔑 Hash password utility
 captionSchema.statics.hashPassword = async function (password) {
     return await bcrypt.hash(password, 10);
-}
+};
 
-module.exports = mongoose.model("caption", captionSchema);
+const captionModel = mongoose.model("Caption", captionSchema);
+module.exports = captionModel;
