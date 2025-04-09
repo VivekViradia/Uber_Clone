@@ -5,7 +5,9 @@ import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import axios from "axios";
+import getUserAndCaptionLogin from "../../services/userService";
+
+
 const SignInComponent = () => {
   const { slug } = useParams();
   const router = useRouter();
@@ -34,21 +36,12 @@ const SignInComponent = () => {
 
   const handleLogin = async (values) => {
     setErrorMessage("");
-    await axios
-      .post(
-        `${process.env.NEXT_PUBLIC_API_URL}/${
-          slug === "caption" ? "caption" : "user"
-        }/login`,
-        values,
-      )
-      .then((res) => {
-        console.log("RES: ", res);
-      })
+    await getUserAndCaptionLogin(slug, values).then((res) => {
+      router.push("/");
+    })
       .catch((err) => {
-        console.log("ERR: ", err.response.data.message);
-        setErrorMessage(err.response.data.message);
+        setErrorMessage(err);
       });
-    console.log("Button Clicked", values, slug);
   };
 
   return (
