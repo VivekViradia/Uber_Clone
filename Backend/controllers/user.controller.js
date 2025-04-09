@@ -22,11 +22,11 @@ module.exports.loginUser = async (req, res, next) => {
     const { email, password } = req.body;
     const user = await userModel.findOne({ email }).select("+password");
     if (!user) {
-        return res.status(401).json({ message: "Invalid email or password_1" });
+        return res.status(401).json({ message: "Invalid email or password" });
     }
     const isPasswordValid = await user.comparePassword(password);
     if (!isPasswordValid) {
-        return res.status(401).json({ message: "Invalid email or password_2" });
+        return res.status(401).json({ message: "Invalid email or password" });
     }
     const token = user.generateToken();
     res.cookie("token", token);
