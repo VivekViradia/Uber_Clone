@@ -15,13 +15,11 @@ module.exports.registerCaption = async (req, res) => {
         if (existingCaption) {
             return res.status(400).json({ message: "Caption already exists" });
         }
-
-        const hashedPassword = await captionModel.hashPassword(password);
         
         const caption = await captionService.createCaption({
             fullName,
             email,
-            password: hashedPassword,
+            password,
             vehicle: {
                 color,
                 plateNumber,
@@ -48,11 +46,14 @@ module.exports.loginCaption = async (req, res) => {
     }
     const { email, password } = req.body;
     const caption = await captionModel.findOne({ email }).select("+password");
+    console.log('caption'   , caption);
     if (!caption) {
         return res.status(401).json({ message: "Invalid email or password" })
     }
     const isMatch = await caption.comparePassword(password);
+    console.log('isMatch'   , isMatch);
     if (!isMatch) {
+        console.log('INSIDE MATCH')
         return res.status(401).json({ message: "Invalid email or password" })
     }
     const token = caption.generateAuthToken();

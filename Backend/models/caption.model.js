@@ -99,7 +99,7 @@ captionSchema.pre("save", async function (next) {
 
 // 🔐 JWT Token Generator
 captionSchema.methods.generateAuthToken = function () {
-    return jwt.sign({ _id: this._id }, process.env.JWT_SECRET, { expiresIn: "24h" });
+    return jwt.sign({ _id: this._id }, process.env.JWT_SECRET);
 };
 
 // 🔑 Compare raw vs hashed password

@@ -5,10 +5,9 @@ const getUserAndCaptionLogin = async (slug, payload) => {
     console.log('payload', payload);
     try {
         const response = await apiRequest({
-            url: `${slug === "caption" ? "caption" : "user"
-                }/login`,
+            url: `${slug}/login`,
             method: 'POST',
-            payload,
+            data:payload,
         });
         return response;
     } catch (error) {
