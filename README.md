@@ -8,67 +8,163 @@ A full-stack ride-sharing application clone that replicates core functionalities
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
+- [Backend Overview](#backend-overview)
+  - [Backend Routes](#backend-routes)
+- [Frontend Overview](#frontend-overview)
+  - [Frontend Features](#frontend-features)
 - [API Documentation](#api-documentation)
   - [Base URL](#base-url)
   - [Authentication](#authentication)
   - [Error Handling](#error-handling)
   - [Endpoints](#endpoints)
+- [Contributing](#contributing)
+
+---
 
 ## Features
-- User authentication (registration, login)
+- User and Captain authentication (registration, login, logout)
 - Real-time location tracking
 - Ride booking and management
-- [Add more features as implemented]
+- JWT-based authentication
+- Modular backend and frontend architecture
+
+---
 
 ## Tech Stack
+
 ### Backend
-- Node.js
-- Express.js
-- MongoDB
-- JWT Authentication
-- Socket.IO
+- **Node.js**: JavaScript runtime for server-side development.
+- **Express.js**: Web framework for building RESTful APIs.
+- **MongoDB**: NoSQL database for storing user and ride data.
+- **JWT Authentication**: Secure authentication using JSON Web Tokens.
+- **Socket.IO**: Real-time communication for ride updates.
 
 ### Frontend
-[Add frontend technologies]
+- **React.js**: Frontend library for building user interfaces.
+- **Next.js**: Framework for server-side rendering and routing.
+- **Redux Toolkit**: State management for frontend.
+- **Tailwind CSS**: Utility-first CSS framework for styling.
+
+---
 
 ## Getting Started
 
 ### Prerequisites
-- Node.js (v14 or higher)
-- MongoDB
-- [Add other prerequisites]
+- **Node.js** (v14 or higher)
+- **MongoDB** (local or cloud instance)
+- **npm** (Node Package Manager)
+
+---
 
 ### Installation
-1. Clone the repository
-```bash
-git clone [repository-url]
-```
 
-2. Install dependencies
-```bash
-cd Backend
-npm install
-```
+#### Backend Setup
+1. Navigate to the `Backend` directory:
+   ```bash
+   cd Backend
+   ```
 
-3. Configure environment variables
-```bash
-cp .env.example .env
-```
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-4. Start the server
-```bash
-npm start
-```
+3. Configure environment variables:
+   - Create a `.env` file in the `Backend` directory.
+   - Add the following variables:
+     ```
+     PORT=5000
+     MONGO_URI=<your_mongodb_connection_string>
+     JWT_SECRET=<your_jwt_secret>
+     ```
+
+4. Start the backend server:
+   ```bash
+   npx nodemon
+   ```
+
+   The backend server will run on `http://localhost:5000`.
+
+---
+
+#### Frontend Setup
+1. Navigate to the `frontend` directory:
+   ```bash
+   cd frontend
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Configure environment variables:
+   - Create a `.env.local` file in the `frontend` directory.
+   - Add the following variables:
+     ```
+     NEXT_PUBLIC_API_URL=http://localhost:5000/api/v1
+     ```
+
+4. Start the frontend server:
+   ```bash
+   npm run dev
+   ```
+
+   The frontend server will run on `http://localhost:3000`.
+
+---
+
+## Backend Overview
+
+The backend is built with Node.js and Express.js. It provides RESTful APIs for user and captain authentication, ride management, and more.
+
+### Backend Routes
+
+#### 1. **Authentication Routes**
+| Method | Endpoint               | Description                     |
+|--------|------------------------|---------------------------------|
+| POST   | `/api/v1/caption/register` | Register a new captain          |
+| POST   | `/api/v1/caption/login`    | Login as a captain              |
+| GET    | `/api/v1/caption/profile`  | Get captain profile (protected) |
+| POST   | `/api/v1/caption/logout`   | Logout a captain                |
+
+#### 2. **User Routes**
+| Method | Endpoint               | Description                     |
+|--------|------------------------|---------------------------------|
+| POST   | `/api/v1/users/register` | Register a new user             |
+| POST   | `/api/v1/users/login`    | Login as a user                 |
+| GET    | `/api/v1/users/profile`  | Get user profile (protected)    |
+| POST   | `/api/v1/users/logout`   | Logout a user                   |
+
+#### 3. **Ride Routes**
+| Method | Endpoint               | Description                     |
+|--------|------------------------|---------------------------------|
+| POST   | `/api/v1/rides/book`     | Book a ride                     |
+| GET    | `/api/v1/rides/:id`      | Get ride details                |
+| PATCH  | `/api/v1/rides/:id`      | Update ride status              |
+
+---
+
+## Frontend Overview
+
+The frontend is built with React.js and Next.js. It provides a user-friendly interface for booking rides, managing profiles, and more.
+
+### Frontend Features
+- **User Authentication**: Register and login as a user or captain.
+- **Ride Booking**: Book a ride and track its status.
+- **Responsive Design**: Optimized for both desktop and mobile devices.
+
+---
 
 ## API Documentation
 
 ### Base URL
 ```
-http://localhost:3000/api/v1
+http://localhost:5000/api/v1
 ```
 
 ### Authentication
-The API uses JWT (JSON Web Tokens) for authentication. Protected routes require a valid JWT token in the Authorization header:
+The API uses JWT (JSON Web Tokens) for authentication. Protected routes require a valid JWT token in the `Authorization` header:
 ```
 Authorization: Bearer <token>
 ```
@@ -76,42 +172,36 @@ Authorization: Bearer <token>
 ### Error Handling
 The API uses conventional HTTP response codes:
 
-| Status Code | Description |
-|------------|-------------|
-| 200 | Success |
-| 201 | Created |
-| 400 | Bad Request |
-| 401 | Unauthorized |
-| 403 | Forbidden |
-| 404 | Not Found |
-| 500 | Internal Server Error |
+| Status Code | Description             |
+|-------------|-------------------------|
+| 200         | Success                 |
+| 201         | Created                 |
+| 400         | Bad Request             |
+| 401         | Unauthorized            |
+| 403         | Forbidden               |
+| 404         | Not Found               |
+| 500         | Internal Server Error   |
+
+---
 
 ### Endpoints
 
-#### 1. User Registration
-Create a new user account in the system.
-
+#### 1. **User Registration**
 **Endpoint:** `POST /users/register`
-
-**Request Headers:**
-```
-Content-Type: application/json
-```
 
 **Request Body:**
 ```json
 {
     "fullName": {
-        "firstName": "John",     // Required, minimum 3 characters
-        "lastName": "Doe"        // Required, minimum 3 characters
+        "firstName": "John",
+        "lastName": "Doe"
     },
-    "email": "john@example.com", // Required, valid email format
-    "password": "password123"    // Required, minimum 6 characters
+    "email": "john@example.com",
+    "password": "password123"
 }
 ```
 
-**Success Response:**
-- Status Code: `201 Created`
+**Response:**
 ```json
 {
     "user": {
@@ -120,38 +210,77 @@ Content-Type: application/json
             "lastName": "Doe"
         },
         "email": "john@example.com",
-        "_id": "user_id",
-        "socketId": null
+        "_id": "user_id"
     },
     "token": "jwt_token_string"
 }
 ```
 
-**Error Response:**
-- Status Code: `400 Bad Request`
+---
+
+#### 2. **Captain Login**
+**Endpoint:** `POST /caption/login`
+
+**Request Body:**
 ```json
 {
-    "errors": [
-        {
-            "msg": "First name must be at least 3 characters long",
-            "param": "fullName.firstName",
-            "location": "body"
-        }
-    ]
+    "email": "captain@example.com",
+    "password": "password123"
 }
 ```
 
-**Validation Rules:**
-| Field | Validation |
-|-------|------------|
-| firstName | Required, minimum 3 characters |
-| lastName | Required, minimum 3 characters |
-| email | Required, valid email format, must be unique |
-| password | Required, minimum 6 characters |
+**Response:**
+```json
+{
+    "message": "Login successful",
+    "token": "jwt_token_string"
+}
+```
+
+---
+
+#### 3. **Book a Ride**
+**Endpoint:** `POST /rides/book`
+
+**Request Body:**
+```json
+{
+    "pickupLocation": "Location A",
+    "dropoffLocation": "Location B",
+    "rideType": "car"
+}
+```
+
+**Response:**
+```json
+{
+    "ride": {
+        "_id": "ride_id",
+        "pickupLocation": "Location A",
+        "dropoffLocation": "Location B",
+        "status": "pending"
+    }
+}
+```
+
+---
 
 ## Contributing
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+1. Fork the repository.
+2. Create your feature branch:
+   ```bash
+   git checkout -b feature/AmazingFeature
+   ```
+3. Commit your changes:
+   ```bash
+   git commit -m 'Add some AmazingFeature'
+   ```
+4. Push to the branch:
+   ```bash
+   git push origin feature/AmazingFeature
+   ```
+5. Open a Pull Request.
+
+---
+
+Let me know if you need further updates or clarifications!
