@@ -13,6 +13,7 @@ export const commonSlice = createSlice({
     initialState: initialvalue,
     reducers: {
         showModel: (state, action) => {
+            console.log('action', action.payload)
             state.isModelOpen = action.payload
         },
         showLoginModel: (state, action) => {

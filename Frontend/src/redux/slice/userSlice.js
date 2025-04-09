@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit"
 
 const initialState = {
-    userDetails: {
+    captionDetails: {
         fullName: {
             firstName: "",
             lastName: ""
@@ -23,9 +23,12 @@ export const userSlice = createSlice({
     name: 'user',
     initialState,
     reducers: {
-        UpdateUserDetails(state, action) {
+        UpdateCaptionDetails(state, action) {
             // Update the user details in the state
-            state.userDetails = action.payload;
+            state.captionDetails.fullName = action.payload.fullName;
+            state.captionDetails.email = action.payload.email;
+            state.captionDetails.password = action.payload.password;
+            state.captionDetails.status = action.payload.status;
         },
     }
 })

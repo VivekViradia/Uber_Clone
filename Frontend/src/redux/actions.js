@@ -3,7 +3,7 @@ import { userActions } from "./slice/userSlice";
 
 const allActions = {
     ...userActions,
-    ...commonActions
+    ...commonActions,
 }
 
 export default allActions;
