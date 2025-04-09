@@ -29,6 +29,23 @@ export const captionSignUpSchema = Yup.object({
   }),
 });
 
+export const userSignUpSchema = Yup.object({
+  fullName: Yup.object({
+    firstName: Yup.string()
+      .required("First name is required")
+      .min(2, "Minimum 2 characters"),
+    lastName: Yup.string()
+      .required("Last name is required")
+      .min(2, "Minimum 2 characters"),
+  }),
+  email: Yup.string()
+    .required("Email is required")
+    .email("Invalid email format"),
+  password: Yup.string()
+    .required("Password is required")
+    .min(6, "Minimum 6 characters"),
+});
+
 export const SignInSchema = Yup.object({
     email: Yup.string()
       .trim()

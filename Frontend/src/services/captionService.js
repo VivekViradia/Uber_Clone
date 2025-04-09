@@ -1,8 +1,10 @@
+import { apiRequest } from '../utils/axios';
+
 export const getCaptionLogin = async (params) => {
   try {
     const response = await apiRequest({
-      url: '/captions',
-      method: 'GET',
+      url: 'caption/login',
+      method: 'POST',
       params,
     });
     return response;
@@ -10,3 +12,17 @@ export const getCaptionLogin = async (params) => {
     throw error;
   }
 }
+
+export const getCaptionRegister = async (payload) => {
+  try {
+    const response = await apiRequest({
+      url: 'caption/register',
+      method: 'POST',
+      data: payload,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
+

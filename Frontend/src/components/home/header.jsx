@@ -4,14 +4,18 @@ import { deleteCookie, getCookie } from "cookies-next";
 import Image from "next/image";
 import { useActions } from "../../redux/hook";
 import { useSelector } from "react-redux";
+import Link from "next/link";
 
 const HeaderComponent = () => {
   const [userName, setUserName] = useState(null);
-  const { showModel } = useActions();
-  const {userDetails} = useSelector((state) => state.user);
+  const { showModel, UpdateCaptionDetails } = useActions();
+  const { userDetails } = useSelector((state) => state.user);
+  const { isModelOpen } = useSelector((state) => state.common);
   useEffect(() => {
     if (userDetails) {
-      setUserName(`${userDetails?.fullName?.firstName} ${userDetails?.fullName?.lastName}`);
+      setUserName(
+        `${userDetails?.fullName?.firstName} ${userDetails?.fullName?.lastName}`,
+      );
     }
   }, [userDetails]);
 
@@ -20,12 +24,20 @@ const HeaderComponent = () => {
     deleteCookie("captionDetails");
     deleteCookie("captionId");
     setUserName(null);
+    UpdateCaptionDetails({
+      fullName: { firstName: "", lastName: "" },
+      email: "",
+      phoneNumber: "",
+      address: "",
+      userId: "",
+      userType: "",
+    });
   };
 
   const handleLogin = () => {
     console.log("Login Clicked");
-    showModel(true)
-  }
+    showModel(true);
+  };
 
   const isLoggedIn = !!userName;
 
@@ -44,9 +56,12 @@ const HeaderComponent = () => {
       </div>
 
       {/* Title */}
-      <h1 className='text-xl font-bold text-gray-800 text-center whitespace-nowrap underline'>
+
+      <Link className='text-xl font-bold text-gray-800 text-center whitespace-nowrap underline'
+      href="/"
+      >
         NEXON A LUXURY CAB SERVICE
-      </h1>
+      </Link>
 
       {/* Login/Logout */}
       <div className='flex items-center gap-4 text-gray-700'>
@@ -64,7 +79,7 @@ const HeaderComponent = () => {
           </div>
           <p>Contact Us</p>
         </div>
-        {isLoggedIn ? (
+        {isModelOpen ? (
           <>
             <div className='justify-center items-center gap-2 cursor-pointer'>
               <div className='flex justify-center items-center'>
@@ -86,11 +101,11 @@ const HeaderComponent = () => {
           </>
         ) : (
           <div className='justify-center items-center gap-2 cursor-pointer'>
-            <div className='flex justify-center items-center'>
-              <button
-                onClick={handleLogin}
-                title='Login'
-              >
+            <button
+              onClick={handleLogin} // Correctly invoke the function
+              title='Login'
+            >
+              <div className='flex justify-center items-center'>
                 <svg
                   xmlns='http://www.w3.org/2000/svg'
                   height='24px'
@@ -100,9 +115,9 @@ const HeaderComponent = () => {
                 >
                   <path d='M480-120v-80h280v-560H480v-80h280q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H480Zm-80-160-55-58 102-102H120v-80h327L345-622l55-58 200 200-200 200Z' />
                 </svg>
-              </button>
-            </div>
-            <span className='font-medium'>Login</span>
+              </div>
+              <span className='font-medium'>Login</span>
+            </button>
           </div>
         )}
       </div>

@@ -11,7 +11,7 @@ import { useActions } from "../../redux/hook";
 const SignInComponent = () => {
   const router = useRouter();
   const { loginModel } = useSelector((state) => state.common);
-  const {showLoginModel} = useActions()
+  const { showLoginModel } = useActions();
   const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const {
@@ -27,33 +27,33 @@ const SignInComponent = () => {
     setErrorMessage("");
     await getUserAndCaptionLogin(loginModel.type, values)
       .then((res) => {
+        console.log("response", res);
         router.push("/");
         showLoginModel({
           isOpen: false,
           type: "",
-        })
+        });
       })
       .catch((err) => {
         setErrorMessage(err);
       });
   };
-if (!loginModel.isOpen || loginModel.type === '') return null;
+  if (!loginModel.isOpen || loginModel.type === "") return null;
   return (
     <div
       id='LoginModal'
       aria-hidden='true'
       className='overflow-y-auto overflow-x-hidden fixed z-50 justify-center items-center h-modal inset-0 text-default-text tracking-normal'
-      
     >
-      
-      <div className='w-full h-full bg-[#000000] bg-opacity-[0.50] flex items-center justify-center' >
-        <div className='relative px-[16px] w-full max-w-md h-auto' >
-          <div className='relative bg-[#ffffff] rounded-[15px] max-h-screen overflow-y-auto py-[16px] lg:py-[50px] px-[22px] lg:px-[34px]' >
-            <div className=' flex items-center justify-center' style={{ backgroundColor: "rgba(167, 167, 167, 0.75)" }}>
+      <div className='w-full h-full bg-[#000000] bg-opacity-[0.50] flex items-center justify-center'>
+        <div className='relative px-[16px] w-full max-w-md h-auto'>
+          <div className='relative bg-[#ffffff] rounded-[15px] max-h-screen overflow-y-auto py-[16px] lg:py-[50px] px-[22px] lg:px-[34px]'>
+            <div
+              className=' flex items-center justify-center'
+              style={{ backgroundColor: "rgba(167, 167, 167, 0.75)" }}
+            >
               <div className='relative w-full shadow-lg rounded-lg p-6 overflow-hidden'>
-                <div
-                  className='absolute inset-0 bg-cover bg-center'
-                />
+                <div className='absolute inset-0 bg-cover bg-center' />
                 <div className='relative z-10'>
                   <h2 className='text-3xl font-bold text-center mb-6 text-gray-800'>
                     Welcome Back! {loginModel.type.toUpperCase()}
@@ -90,7 +90,7 @@ if (!loginModel.isOpen || loginModel.type === '') return null;
                         </p>
                       )}
                       <div
-                        className='absolute right-[10px] top-[186px] opacity-50'
+                        className='absolute right-[10px] top-[221px] opacity-50'
                         onClick={() => setShowPassword(!showPassword)}
                       >
                         <span className='material-icons-outlined'>
@@ -110,7 +110,13 @@ if (!loginModel.isOpen || loginModel.type === '') return null;
                       <button
                         type='button'
                         className='text-blue-500 hover:underline cursor-pointer'
-                        onClick={() => router.push(`/signUp/${loginModel.type}`)}
+                        onClick={() => {
+                          router.push(`/signUp/${loginModel.type}`);
+                          showLoginModel({
+                            isOpen: false,
+                            type: "",
+                          });
+                        }}
                       >
                         Sign Up
                       </button>
