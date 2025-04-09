@@ -50,6 +50,18 @@ userSchema.pre("save", async function (next) {
     }
 });
 
+// 🔐 Auto-hash password before saving
+userSchema.pre("save", async function (next) {
+    if (!this.isModified("password")) return next();
+
+    try {
+        this.password = await this.constructor.hashPassword(this.password);
+        next();
+    } catch (err) {
+        next(err);
+    }
+});
+
 userSchema.methods.generateToken = function () {
     return jwt.sign({ id: this._id }, process.env.JWT_SECRET);
 };
