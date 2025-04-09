@@ -9,9 +9,6 @@ module.exports.registerUser = async (req, res, next) => {
         return res.status(400).json({ errors: errors.array() });
     }
     const { fullName, email, password } = req.body;
-    console.log("fullName", fullName);
-    console.log("email", email);
-    console.log("password", password);
     const user = await userService.createUser({ fullName, email, password });
     const token = user.generateToken();
     res.status(201).json({ user, token });
@@ -25,11 +22,11 @@ module.exports.loginUser = async (req, res, next) => {
     const { email, password } = req.body;
     const user = await userModel.findOne({ email }).select("+password");
     if (!user) {
-        return res.status(401).json({ message: "Invalid email or password" });
+        return res.status(401).json({ message: "Invalid email or password_1" });
     }
     const isPasswordValid = await user.comparePassword(password);
     if (!isPasswordValid) {
-        return res.status(401).json({ message: "Invalid email or password" });
+        return res.status(401).json({ message: "Invalid email or password_2" });
     }
     const token = user.generateToken();
     res.cookie("token", token);
