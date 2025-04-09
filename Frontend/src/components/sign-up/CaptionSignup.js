@@ -6,7 +6,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
 import { setCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
-import { useActions } from '@redux/hooks';
+import { useActions } from '../../redux/hook';
 
 
 const captionSignUpSchema = Yup.object({
@@ -61,7 +61,9 @@ const CaptionSignup = () => {
                 router.push("/");
             })
             .catch((err) => {
-                alert(err.response.data.message);
+                console.log('err.response.data.message);', err);
+                setErrorMessage(err.response.data.message);
+                // alert(err.response.data.message);
             });
     };
     return (

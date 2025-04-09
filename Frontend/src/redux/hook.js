@@ -1,10 +1,8 @@
-import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { bindActionCreators } from '@reduxjs/toolkit';
-import { AppStateType } from './reducers';
-import allActions from './actions';
+import { userActions } from './slice/userSlice';
 
 export const useActions = () => {
-  const dispatch = useDispatch();
-  return bindActionCreators(allActions, dispatch);
+    const dispatch = useDispatch();
+    return bindActionCreators(userActions, dispatch);
 };
-export const useTypedSelector = useSelector;
