@@ -3,9 +3,9 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
-import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import getUserAndCaptionLogin from "../../services/userService";
+import { SignInSchema } from "../../utils/validation";
 
 
 const SignInComponent = () => {
@@ -13,17 +13,6 @@ const SignInComponent = () => {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-
-  console.log("SLUG: ", slug);
-  const EMAIL_REGEX = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
-
-  const SignInSchema = Yup.object({
-    email: Yup.string()
-      .trim()
-      .required("Email is required")
-      .matches(EMAIL_REGEX, "Email is not valid"),
-    password: Yup.string().trim().required("Password is required"),
-  });
 
   const {
     register,

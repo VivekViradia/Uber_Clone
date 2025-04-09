@@ -1,5 +1,5 @@
 import React from 'react'
-import SignInComponent from "../../../components/sign-in"
+import SignInComponent from "../../../components/sign-in/index"
 
 const SignInPage = () => {
   return (
