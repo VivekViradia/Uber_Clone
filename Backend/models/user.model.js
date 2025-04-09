@@ -15,6 +15,11 @@ const userSchema = new mongoose.Schema({
             minLength: [3, "Last name must be at least 3 characters long"],
         },
     },
+    userId: {
+        type: Number,
+        unique: true,
+        max: [99999, "Caption ID must be at most 5 digits"],
+    },
     email: {
         type: String,
         required: true,
@@ -30,6 +35,19 @@ const userSchema = new mongoose.Schema({
     socketId: {
         type: String,
     },
+});
+
+// 🔁 Auto-increment captionId before saving
+userSchema.pre("save", async function (next) {
+    if (!this.isNew) return next();
+
+    try {
+        const last = await this.constructor.findOne().sort("-userId").exec();
+        this.userId = last?.userId ? last.userId + 1 : 10001;
+        next();
+    } catch (err) {
+        next(err);
+    }
 });
 
 userSchema.methods.generateToken = function () {

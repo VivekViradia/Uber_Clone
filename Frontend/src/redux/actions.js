@@ -1,7 +1,9 @@
+import { commonActions } from "./slice/commonSlice";
 import { userActions } from "./slice/userSlice";
 
 const allActions = {
-    ...userActions
+    ...userActions,
+    ...commonActions
 }
 
 export default allActions;
