@@ -1,10 +1,8 @@
 import localFont from "next/font/local";
-import HeaderComponent from "../components/home/header"
-import FooterComponent from "../components/home/footer"
 import "./globals.css";
-import ReduxProvider from '../redux/provider';
-import LoginModel from "../components/common/LoginModel";
-import SignInComponent from "../components/common/SignInComponent";
+import ReduxProvider from '@redux/Provider';
+import HeaderComponent from "@components/home/header"
+import { Footer } from "@components/home/footer"
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -39,10 +37,9 @@ export default function RootLayout({ children }) {
         <div className="bg-gray-100">
           <ReduxProvider>
             <HeaderComponent />
-            <LoginModel />
-            <SignInComponent />
             {children}
-            <FooterComponent />
+
+            <Footer />
           </ReduxProvider>
         </div>
       </body>
