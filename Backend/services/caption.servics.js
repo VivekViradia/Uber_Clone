@@ -1,4 +1,5 @@
 const captionModel = require("../models/caption.model");
+const CustomError = require("../utils/customError");
 
 module.exports.createCaption = async ({ fullName, email, password, vehicle, location }) => {
     try {
@@ -17,7 +18,25 @@ module.exports.createCaption = async ({ fullName, email, password, vehicle, loca
 
         return captionDetails;
     } catch (error) {
-        return error
+        if (error.name === 'ValidationError') {
+            const validationErrors = {};
+
+            // Extract specific validation error messages
+            for (const field in error.errors) {
+                validationErrors[field] = error.errors[field].message;
+
+                // Special handling for enum errors
+                if (error.errors[field].kind === 'enum') {
+                    const enumValues = error.errors[field].properties.enumValues;
+                    validationErrors[field] = `Invalid value. Allowed values are: ${enumValues.join(', ')}`;
+                }
+            }
+            console.log('validationErrors', validationErrors);
+            throw new CustomError("Validation failed", 400, validationErrors);
+        }
+
+        // Re-throw other errors
+        throw new CustomError(error.message || "Internal Server Error", 500);
     }
 
 }
