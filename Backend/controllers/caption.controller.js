@@ -1,6 +1,7 @@
 const captionModel = require("../models/caption.model");
 const { validationResult } = require("express-validator");
 const captionService = require("../services/caption.servics");
+const CustomError = require("../utils/customError");
 
 module.exports.registerCaption = async (req, res) => {
     const errors = validationResult(req);
@@ -35,6 +36,12 @@ module.exports.registerCaption = async (req, res) => {
 
         res.status(201).json({ message: "Caption created successfully", token, caption });
     } catch (error) {
+        if (error instanceof CustomError) {
+            return res.status(error.statusCode).json({
+                message: error.message,
+                details: error.details, // Include validation errors in the response
+            });
+        }
         res.status(500).json({ message: "Error creating caption", error: error.message });
     }
 }
