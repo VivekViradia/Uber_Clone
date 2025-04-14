@@ -1,8 +1,8 @@
-import { CaptainSignupFormValues } from "@/types/caption.type";
+import { CaptainSignupFormValues, CaptionSignUpPayload } from "@/types/caption.type";
 import { apiRequest } from "../utils/axios";
 
 export const getCaptionRegister = async (
-  payload: CaptainSignupFormValues,
+  payload: CaptionSignUpPayload,
 ): Promise<any> => {
   try {
     const response = await apiRequest({

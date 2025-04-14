@@ -14,3 +14,18 @@ export interface CaptainSignupFormValues {
   passengerCapacity: string;
   terms: boolean;
 }
+
+export interface CaptionSignUpPayload{
+  fullName: {
+    firstName: string;
+    lastName: string;
+  },
+  email: string;
+  password: string;
+  vehicle: {
+    vehicleType: string;
+    color: string;
+    plateNumber: string;
+    capacity: string;
+  }
+}
