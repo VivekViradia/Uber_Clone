@@ -35,17 +35,30 @@ export const CaptainSignupForm = () => {
       vehicleColor: "",
       plateNumber: "",
       passengerCapacity: "",
-      terms: false,
     },
   });
 
   const onSubmit = async (data: CaptainSignupFormValues) => {
     console.log("Captain signup data:", data);
     // Handle captain signup logic here
+    const payload = {
+      fullName: {
+        firstName: data.firstName,
+        lastName: data.lastName,
+      },
+      email: data.email,
+      password: data.password,
+      vehicle: {
+        vehicleType: data.vehicleType,
+        color: data.vehicleColor,
+        plateNumber: data.plateNumber,
+        capacity: data.passengerCapacity,
+      },
+    };
     setErrorMessage(null); // Reset error message
-    await getCaptionRegister(data)
+    await getCaptionRegister(payload)
       .then((res) => {
-        console.log("Response: ", res);
+        console.log("Caption SignUp Form Response: ", res?.caption);
         setCookie("captionDetails", res?.caption);
         alert(
           `Caption you are register as ${res?.caption?.fullName?.firstName} ${res?.caption?.fullName?.lastName}`,
@@ -53,7 +66,7 @@ export const CaptainSignupForm = () => {
         router.push("/");
       })
       .catch((err) => {
-        console.log("err.response.data.message);", err);
+        console.log("Caption SignUp Form Error: ", err);
         setErrorMessage(err);
         // alert(err.response.data.message);
       });
