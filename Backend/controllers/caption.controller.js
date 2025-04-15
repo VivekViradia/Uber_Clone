@@ -5,7 +5,7 @@ const CustomError = require("../utils/customError");
 
 module.exports.registerCaption = async (req, res) => {
     const errors = validationResult(req);
-    if (!errors.isEmpty()) {
+    if (!errors.isEmpty()) { 
         return res.status(400).json({ errors: errors.array() });
     }
     const { fullName, email, password, vehicle, location } = req.body;
